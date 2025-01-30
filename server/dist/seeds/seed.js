@@ -1,10 +1,12 @@
 import db from "../config/connection.js";
 import Question from "../models/Question.js";
 import cleanDB from "./cleanDb.js";
-import pythonQuestions from './pythonQuestions.json' assert { type: "json" };
-db.once('open', async () => {
-    await cleanDB('Question', 'questions');
+import { readFile } from "fs/promises";
+// import pythonQuestions from "./pythonQuestions.json" assert { type: "json" };
+const pythonQuestions = JSON.parse(await readFile(new URL("./pythonQuestions.json", import.meta.url), "utf-8"));
+db.once("open", async () => {
+    await cleanDB("Question", "questions");
     await Question.insertMany(pythonQuestions);
-    console.log('Questions seeded!');
+    console.log("Questions seeded!");
     process.exit(0);
 });
